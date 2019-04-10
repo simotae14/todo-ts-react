@@ -37,8 +37,15 @@ export default function App(): JSX.Element {
 
     // function that set the complete value of a todo to true
     const completeTodo = (index: number): void => {
-        const newTodos = [...todos];
+        const newTodos: iTodo[] = [...todos];
         newTodos[index].complete = !newTodos[index].complete;
+        setTodosList(newTodos);
+    }
+
+    // function that remove the todo from the todos list
+    const removeTodo = (index: number): void => {
+        const newTodos: iTodo[] = [...todos];
+        newTodos.splice(index, 1);
         setTodosList(newTodos);
     }
 
@@ -55,8 +62,11 @@ export default function App(): JSX.Element {
                 {
                     todos.map((todo:iTodo, index:number): JSX.Element => (
                         <Fragment key={index}>
-                            <div>{todo.text}</div>
-                            <button type='button' onClick={() => completeTodo(index) }>{ todo.complete ? 'Incomplete' : 'Complete' }</button>
+                            <div style={{ textDecoration: todo.complete ? 'line-through' : '' }}>
+                                {todo.text}
+                            </div>
+                            <button type='button' onClick={(): void => completeTodo(index) }>{ todo.complete ? 'Incomplete' : 'Complete' }</button>
+                            <button type='button' onClick={(): void => removeTodo(index) }>&times;</button>
                         </Fragment>
                     ))
                 }
