@@ -4,13 +4,42 @@ import ReactDOM from 'react-dom'
 // create an alias for the event type
 type FormElem = React.FormEvent<HTMLFormElement>
 
+// create the ITodo interface
+interface ITodo {
+    text: string
+    complete: boolean
+}
+
 export default function App(): JSX.Element {
     // set the useState hook for the todo input content
     const [todo, setTodoValue] = useState<string>('')
+    // set the useState hook for the todos list
+    const [todos, setTodosList] = useState<iTodo[]>([])
 
     const handleSubmit = (e: FormElem):void => {
         e.preventDefault();
+        // addTodo
+        addTodo(todo);
         setTodoValue('');
+    }
+
+    // function to add a new todo into the todos
+    const addTodo = (text: string): void => {
+        const newTodos: iTodo[] = [
+            ...todos,
+            {
+                text,
+                complete: false
+            }
+        ];
+        setTodosList(newTodos);
+    }
+
+    // function that set the complete value of a todo to true
+    const completeTodo = (index: number): void => {
+        const newTodos = [...todos];
+        newTodos[index].complete = !newTodos[index].complete;
+        setTodosList(newTodos);
     }
 
     return (
@@ -22,6 +51,16 @@ export default function App(): JSX.Element {
                 <input type="text" value={todo} onChange={ e => setTodoValue(e.target.value) } required />
                 <button type="submit">Add Todo</button>
             </form>
+            <section>
+                {
+                    todos.map((todo:iTodo, index:number): JSX.Element => (
+                        <Fragment key={index}>
+                            <div>{todo.text}</div>
+                            <button type='button' onClick={() => completeTodo(index) }>{ todo.complete ? 'Incomplete' : 'Complete' }</button>
+                        </Fragment>
+                    ))
+                }
+            </section>
         </Fragment>
     )
 }
